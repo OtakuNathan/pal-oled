@@ -11,8 +11,6 @@ from typing import TYPE_CHECKING, Any, Literal
 
 from pydantic import Field
 
-from pal.behavior.decorators import affordance
-from pal.behavior.contracts import AFFORDANCE_ACTIVATION_DELIBERATIVE, AFFORDANCE_VISIBILITY_RESIDENT
 from pal.core.module_registry import MODULE_TIER_DETACHABLE, ModuleHandle
 from pal.core.turn_events import TURN_END, TURN_START, TURN_TOOL_CALL_AFTER, TURN_TOOL_CALL_BEFORE, TurnEvent
 from pal.execution.tool_facade import StrictToolModel, ToolGuidance
