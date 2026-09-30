@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pathlib import Path
+from pal.plugins.contracts import PluginBuildContext
 
 # NOTE: this module must NOT be called ``introspection``. Module names are cached
 # process-wide by Python, and the oled_emotion plugin already ships a top-level
@@ -10,7 +10,11 @@ from pathlib import Path
 from status_provider import register_with_core
 
 
-def build_plugin(*, plugin_dir: Path):
+def build_plugin(context: PluginBuildContext):
+    plugin_dir = context.plugin_dir
+    if plugin_dir is None:
+        raise ValueError("plugin_dir is required")
+
     class OledStatusCommunityBundle:
         plugin_id = "oled_status"
         version = "0.1.0"
