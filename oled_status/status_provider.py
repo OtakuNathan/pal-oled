@@ -378,7 +378,10 @@ class OledStatusProvider:
         action_name="status",
         aliases=("oled_status_status",),
         guidance=ToolGuidance(
-            purpose="Inspect the OLED status board sidecar's health and current fields.",
+            search_domain="display", search_domain_aliases=("oled", "status board"),
+            search_domain_description="Passive hardware status boards and their displayed runtime fields.",
+            search_terms=("screen", "board", "fields", "health", "status", "clock", "weather", "activity", "diagnose"),
+            purpose="Inspect the passive OLED status board's sidecar health, current screen and displayed runtime fields.",
             use_when="live OLED board health, current screen, or displayed fields are needed",
             do_not_use_when="the request is to change what the board shows",
             failure_next_steps="check the sidecar stderr log under the runtime data dir",

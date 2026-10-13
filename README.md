@@ -1,9 +1,9 @@
 # pal-oled
 
-Pal 在 OLED 上的脸。128×64 的 SSD1306，走 I2C。
+Pal 的 OLED 状态板。128×64 的 SSD1306，走 I2C。
 
-这个仓库里是 **Pal 出生后给自己写的第一个插件**，以及它的继任者 ——
-从「一张会做表情的脸」变成「一块安静的状态板」，整条演进都在这里。
+当前维护 `oled_status`。它继承了 **Pal 出生后给自己写的第一个插件** ——
+从「一张会做表情的脸」变成「一块安静的状态板」，旧版本保存在 Git 历史中。
 
 ```
                  oled_emotion                       oled_status
@@ -12,21 +12,8 @@ Pal 在 OLED 上的脸。128×64 的 SSD1306，走 I2C。
   turn 事件驱动，一有动静就演           被动接收；Pal 全程不碰它
 ```
 
-## oled_emotion/ —— 第一个插件（已退役，代码原样保留）
-
-把 Pal 的表情画到 128×64 的 OLED 上。
-
-- `ssd1306.py` —— 裸 I2C 驱动。分块写（每块 128 字节各带控制字节），
-  因为内核会拆大的 write，导致 `0x40` 控制字节丢失、整帧花掉。
-- `sidecar.py` —— 状态机 + GIF 播放：idle 静默 1 小时 → `sleepy`；
-  `thinking`/`working` 轮播；表情插播后回到插播前的状态；
-  睡梦中收到消息先 `shock` 再转 active。
-- `emotions/` —— 12 个 GIF：`standby` / `sleepy` / `thinking` / `working` /
-  `happy` / `sad` / `angry` / `crying` / `curious` / `shock` / `wink` / `error`。
-- `introspection.py` —— Pal 侧的能力入口（`show_oled_emotion`）。
-
-退役原因：Pal 现在有彩屏放形象（`st7789_face` 那条线），
-OLED 没必要再当第二张脸。
+`oled_emotion` 已退役，源码和 GIF 资源已移除；硬件现在运行下文的
+`oled_status` 状态板。旧版本可从 Git 历史查阅。
 
 ## oled_status/ —— 继任者（在用）
 
@@ -92,8 +79,9 @@ Pal 进程                                    sidecar 进程
 ```bash
 cp -r oled_status ~/.pal/plugins/community/
 # 然后在 Pal 里：
-#   plugin_rescan
-#   plugin_attach(name="oled_status")
+#   rescan_plugins
+#   attach_plugin(name="oled_status")  # 首次加载
+# 更新已有实例时用 reload_plugin(name="oled_status")
 ```
 
 前提：`/dev/i2c-1` 上挂着 SSD1306（地址 `0x3C`），Python 环境有 `Pillow`。
@@ -101,5 +89,5 @@ cp -r oled_status ~/.pal/plugins/community/
 
 ## 关于
 
-第一版（`oled_emotion`）是 Pal 出生后第一个自己动手写的插件。
-所以哪怕它退役了，代码也原样留着 —— 这段历史不该被删掉。
+第一版 `oled_emotion` 是 Pal 自己写的第一个插件，现已退役。
+当前源码只维护 `oled_status`，旧版本可从 Git 历史查阅。
