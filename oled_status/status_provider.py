@@ -14,6 +14,8 @@ structured data, no text parsing.
 
 from __future__ import annotations
 
+from pal.foundation.diagnostics import exception_reason, diagnostic_reason, public_diagnostics
+
 import asyncio
 import json
 import os
@@ -202,7 +204,7 @@ def _send_payload(
         conn.close()
         return response
     except Exception as exc:  # surfaced verbatim to the caller
-        return f"ERR: {exc}"
+        return "ERR: " + exception_reason(exc)
 
 
 def _read_snapshot(socket_path: Path, *, timeout: float = 1.5) -> dict[str, Any]:
@@ -210,7 +212,7 @@ def _read_snapshot(socket_path: Path, *, timeout: float = 1.5) -> dict[str, Any]
     try:
         payload = json.loads(raw)
     except ValueError:
-        return {"raw": raw}
+        return {"error": diagnostic_reason(raw)}
     return payload if isinstance(payload, dict) else {"raw": raw}
 
 
@@ -403,7 +405,8 @@ class OledStatusProvider:
             status=RuntimeStatus.OK,
             text="oled status board",
             structured=payload,
-            llm_text=render_titled_structured_for_llm("OLED status board", payload),
+            llm_text=render_titled_structured_for_llm("OLED status board", {
+                **payload, **public_diagnostics({key: payload[key] for key in ("last_error", "error") if key in payload})}),
         )
 
 
