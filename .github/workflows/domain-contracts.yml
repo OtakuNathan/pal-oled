@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: OtakuNathan/Pal
-          ref: 15f62fc15732c65fcb323d2f3e06b11213ae4441
+          ref: 68b4f963032cd244171f8cad3974f5c1aa8daca9
           path: .pal-host
       - uses: actions/setup-python@v5
         with:
